@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Truco no Saloon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rye&family=Special+Elite&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/saloon.css">
+</head>
+<body>
+  <div class="saloon">
+    <!-- Decoração da parede -->
+    <div class="parede" aria-hidden="true">
+      <div class="lampiao lampiao-esq"><span class="chama"></span></div>
+      <div class="lampiao lampiao-dir"><span class="chama"></span></div>
+      <div class="cartaz cartaz-1">
+        <span class="cartaz-titulo">PROCURADO</span>
+        <span class="cartaz-silhueta"></span>
+        <span class="cartaz-nome">O ZAP</span>
+        <span class="cartaz-premio">$ 4 pontos</span>
+      </div>
+      <div class="cartaz cartaz-2">
+        <span class="cartaz-titulo">PROCURADO</span>
+        <span class="cartaz-silhueta"></span>
+        <span class="cartaz-nome">PICA-FUMO</span>
+        <span class="cartaz-premio">vivo ou morto</span>
+      </div>
+      <div class="prateleira">
+        <span class="garrafa g1"></span><span class="garrafa g2"></span><span class="garrafa g3"></span><span class="garrafa g4"></span>
+      </div>
+    </div>
+
+    <header class="letreiro">
+      <div class="letreiro-placa">
+        <span class="letreiro-sub">★ Saloon ★</span>
+        <h1>Truco Paulista</h1>
+        <span class="letreiro-sub">Desde 1889 · Proibido roubar no baralho</span>
+      </div>
+    </header>
+
+    <main class="area-jogo" id="area-jogo" hidden>
+      <!-- Painel esquerdo: placar -->
+      <aside class="painel painel-esq">
+        <div class="lousa">
+          <div class="lousa-titulo">Placar</div>
+          <div class="placar">
+            <div class="placar-dupla">
+              <span class="placar-nome">Nós</span>
+              <span class="placar-pontos" id="pontos-nos">0</span>
+            </div>
+            <span class="placar-x">×</span>
+            <div class="placar-dupla">
+              <span class="placar-nome">Eles</span>
+              <span class="placar-pontos" id="pontos-eles">0</span>
+            </div>
+          </div>
+          <div class="placar-meta">Quem fizer 12 leva o ouro</div>
+        </div>
+
+        <div class="placa-info">
+          <div class="info-linha"><span>Mão nº</span><strong id="numero-mao">1</strong></div>
+          <div class="info-linha"><span>Vale</span><strong id="valor-mao">1</strong></div>
+          <div class="info-linha"><span>Rodadas</span><span class="marcas-rodadas" id="marcas-rodadas"></span></div>
+          <div class="info-linha"><span>Bots</span><strong id="nivel-bots">—</strong></div>
+          <div class="selo-tipo" id="selo-tipo" hidden></div>
+        </div>
+      </aside>
+
+      <!-- Mesa -->
+      <section class="centro">
+        <div class="mesa" id="mesa">
+          <div class="feltro">
+            <div class="brasao" aria-hidden="true">TRUCO</div>
+
+            <div class="assento assento-norte" data-posicao="NORTE"></div>
+            <div class="assento assento-oeste" data-posicao="OESTE"></div>
+            <div class="assento assento-leste" data-posicao="LESTE"></div>
+
+            <div class="centro-mesa">
+              <div class="slot slot-norte" data-slot="NORTE"></div>
+              <div class="slot slot-oeste" data-slot="OESTE"></div>
+              <div class="slot slot-leste" data-slot="LESTE"></div>
+              <div class="slot slot-sul" data-slot="SUL"></div>
+
+              <div class="vira-area" id="vira-area">
+                <div class="monte" id="monte" aria-hidden="true"></div>
+                <div class="vira-carta" id="vira-carta"></div>
+                <div class="vira-legenda" id="vira-legenda"></div>
+              </div>
+            </div>
+
+            <div class="faixa" id="faixa" hidden></div>
+            <div class="preparo" id="preparo" hidden></div>
+          </div>
+        </div>
+
+        <!-- Você -->
+        <div class="meu-lugar">
+          <div class="assento assento-sul" data-posicao="SUL"></div>
+          <div class="minha-mao" id="minha-mao"></div>
+          <div class="barra-acoes">
+            <label class="chave-cobrir" id="chave-cobrir" hidden>
+              <input type="checkbox" id="opcao-cobrir">
+              <span>Jogar coberta</span>
+            </label>
+            <button class="btn btn-truco" id="btn-truco" hidden>Truco!</button>
+          </div>
+          <div class="dica" id="dica"></div>
+        </div>
+      </section>
+
+      <!-- Painel direito: diário -->
+      <aside class="painel painel-dir">
+        <div class="diario">
+          <div class="diario-titulo">Diário do Saloon</div>
+          <ol class="diario-lista" id="diario"></ol>
+        </div>
+        <div class="botoes-painel">
+          <button class="btn btn-madeira" id="btn-regras">Regras</button>
+          <button class="btn btn-madeira" id="btn-reiniciar">Reiniciar</button>
+          <button class="btn btn-madeira btn-perigo" id="btn-abandonar">Abandonar</button>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <!-- UC01: tela inicial -->
+  <div class="modal" id="modal-inicio" hidden>
+    <form class="cartaz-grande" id="form-inicio">
+      <span class="prego prego-esq"></span><span class="prego prego-dir"></span>
+      <div class="cartaz-grande-titulo">Procura-se</div>
+      <div class="cartaz-grande-sub">um parceiro de truco</div>
+      <label class="campo">
+        <span>Seu nome, forasteiro</span>
+        <input type="text" id="campo-nome" maxlength="20" placeholder="Forasteiro" autocomplete="off">
+      </label>
+      <fieldset class="campo-nivel">
+        <legend>Fama dos adversários</legend>
+        <label><input type="radio" name="nivel" value="FACIL"><span>Novato<small>joga no chute</small></span></label>
+        <label><input type="radio" name="nivel" value="NORMAL" checked><span>Pistoleiro<small>conhece o jogo</small></span></label>
+        <label><input type="radio" name="nivel" value="DIFICIL"><span>Xerife<small>blefa e conta cartas</small></span></label>
+      </fieldset>
+      <button type="submit" class="btn btn-madeira btn-grande">Sentar à mesa</button>
+      <div class="cartaz-grande-rodape">Recompensa: 12 pontos</div>
+    </form>
+  </div>
+
+  <!-- UC11: responder pedido -->
+  <div class="modal" id="modal-pedido" hidden>
+    <div class="cartaz-grande cartaz-pedido">
+      <div class="pedido-grito" id="pedido-grito">TRUCO!</div>
+      <p class="pedido-texto" id="pedido-texto"></p>
+      <div class="botoes-modal">
+        <button class="btn btn-madeira" data-resposta="ACEITAR" id="btn-aceitar">Cai dentro!</button>
+        <button class="btn btn-madeira btn-perigo" data-resposta="CORRER" id="btn-correr">Correr</button>
+        <button class="btn btn-truco" data-resposta="AUMENTAR" id="btn-aumentar">Seis!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- UC12: mão de onze -->
+  <div class="modal" id="modal-onze" hidden>
+    <div class="cartaz-grande">
+      <div class="cartaz-grande-titulo">Mão de Onze</div>
+      <p class="pedido-texto">Sua dupla tem 11 pontos. Olhe as cartas e decida: jogar vale 3, correr dá 1 ponto para Eles.</p>
+      <div class="onze-maos">
+        <div><div class="onze-rotulo">Suas cartas</div><div class="onze-cartas" id="onze-minhas"></div></div>
+        <div><div class="onze-rotulo">Cartas do parceiro</div><div class="onze-cartas" id="onze-parceiro"></div></div>
+      </div>
+      <div class="botoes-modal">
+        <button class="btn btn-truco" id="btn-onze-jogar">Jogar (vale 3)</button>
+        <button class="btn btn-madeira btn-perigo" id="btn-onze-correr">Correr</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- UC04: cortar -->
+  <div class="modal" id="modal-corte" hidden>
+    <div class="cartaz-grande">
+      <div class="cartaz-grande-titulo">Cortar o baralho</div>
+      <p class="pedido-texto">Você está à esquerda do pé. Escolha quantas cartas vão de cima para baixo.</p>
+      <div class="corte-monte" id="corte-monte"></div>
+      <input type="range" min="1" max="39" value="20" id="corte-ponto" class="corte-slider">
+      <div class="corte-valor"><span id="corte-valor">20</span> cartas</div>
+      <div class="botoes-modal">
+        <button class="btn btn-madeira" id="btn-cortar">Cortar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- UC15: fim de partida -->
+  <div class="modal" id="modal-fim" hidden>
+    <div class="cartaz-grande">
+      <span class="prego prego-esq"></span><span class="prego prego-dir"></span>
+      <div class="cartaz-grande-titulo" id="fim-titulo">Vitória!</div>
+      <div class="fim-placar" id="fim-placar">12 × 7</div>
+      <p class="pedido-texto" id="fim-texto"></p>
+      <div class="botoes-modal">
+        <button class="btn btn-madeira" id="btn-jogar-novamente">Jogar de novo</button>
+        <button class="btn btn-madeira" id="btn-menu">Voltar à porta</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- UC19: confirmar -->
+  <div class="modal" id="modal-confirmar" hidden>
+    <div class="cartaz-grande">
+      <div class="cartaz-grande-titulo" id="confirmar-titulo">Levantar da mesa?</div>
+      <p class="pedido-texto" id="confirmar-texto">A partida será perdida.</p>
+      <div class="botoes-modal">
+        <button class="btn btn-madeira btn-perigo" id="btn-confirmar-sim">Sim</button>
+        <button class="btn btn-madeira" id="btn-confirmar-nao">Continuar jogando</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- UC18: regras -->
+  <div class="modal" id="modal-regras" hidden>
+    <div class="pergaminho">
+      <button class="fechar" id="btn-fechar-regras" aria-label="Fechar">×</button>
+      <h2>Regras da Casa</h2>
+      <h3>Força das cartas</h3>
+      <p>Da mais fraca para a mais forte: <b>4 5 6 7 Q J K A 2 3</b>. O naipe não desempata cartas comuns.</p>
+      <h3>Vira e manilhas</h3>
+      <p>Depois de dar as cartas, o pé vira uma carta. A carta seguinte a ela vira <b>manilha</b>, que vence qualquer outra. Se a vira for 3, a manilha é 4. Entre manilhas: <b>♣ Zap &gt; ♥ Copas &gt; ♠ Espadilha &gt; ♦ Pica-fumo</b>.</p>
+      <h3>A mão</h3>
+      <p>Cada um recebe 3 cartas e a mão é melhor de 3 rodadas. Joga-se no sentido anti-horário, começando pelo jogador à direita do pé.</p>
+      <h3>Empates (empachar)</h3>
+      <p>Empatou a 1ª: quem ganhar a 2ª leva. Empatou a 2ª ou a 3ª: leva quem ganhou a 1ª. Empatou tudo: ninguém pontua. Depois de um empate, <b>quem começa é o pé</b> e todos são obrigados a <b>mostrar a maior carta</b>.</p>
+      <h3>Truco</h3>
+      <p>Na sua vez, antes de jogar, peça <b>Truco</b> (3). Os adversários aceitam, correm ou pedem <b>Seis</b>; depois vêm <b>Nove</b> e <b>Doze</b>. Quem corre entrega o valor anterior ao pedido.</p>
+      <h3>Carta coberta</h3>
+      <p>A partir da 2ª rodada você pode jogar uma carta virada para baixo. Ela vale zero.</p>
+      <h3>Mão de onze e mão de ferro</h3>
+      <p>Com 11 pontos, sua dupla vê as cartas do parceiro e decide se joga (vale 3) ou corre (os outros ganham 1). Sem truco. Se as duas duplas estiverem com 11, é <b>mão de ferro</b>: todos jogam no escuro e quem vencer leva a partida.</p>
+      <h3>Vitória</h3>
+      <p>A primeira dupla a chegar a <b>12 pontos</b> leva a partida.</p>
+    </div>
+  </div>
+
+  <div class="avisos" id="avisos" aria-live="polite"></div>
+
+  <script src="js/api.js"></script>
+  <script src="js/cartas.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+# Saída da compilação (executar.bat / testar.bat)
+build/
+
+# Configuração local do Claude Code (caminho do JDK desta máquina)
+.claude/
+
+# IDEs e sistema
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+desktop.ini
