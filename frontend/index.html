@@ -97,15 +97,22 @@
         </div>
 
         <!-- Você -->
-        <div class="meu-lugar">
-          <div class="assento assento-sul" data-posicao="SUL"></div>
-          <div class="minha-mao" id="minha-mao"></div>
+        <div class="meu-lugar" id="meu-lugar">
+          <div class="assento assento-sul assento-voce" data-posicao="SUL"></div>
+          <div class="area-minha-mao">
+            <div class="aviso-vez" id="aviso-vez" hidden>Sua vez!</div>
+            <div class="minha-mao" id="minha-mao"></div>
+          </div>
           <div class="barra-acoes">
+            <button class="btn btn-truco" id="btn-truco" hidden>
+              <span class="truco-texto" id="truco-texto">Truco!</span>
+              <small class="truco-vale" id="truco-vale">vale 3</small>
+            </button>
+            <div class="truco-legenda" id="truco-legenda"></div>
             <label class="chave-cobrir" id="chave-cobrir" hidden>
               <input type="checkbox" id="opcao-cobrir">
               <span>Jogar coberta</span>
             </label>
-            <button class="btn btn-truco" id="btn-truco" hidden>Truco!</button>
           </div>
           <div class="dica" id="dica"></div>
         </div>

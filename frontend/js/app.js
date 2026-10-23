@@ -167,7 +167,9 @@
           </div>`;
         el.dataset.montado = "1";
       }
-      el.querySelector(".placa-nome").textContent = j.bot ? j.nome : `${j.nome} (você)`;
+      el.querySelector(".placa-nome").innerHTML = j.bot
+        ? escapar(j.nome)
+        : `${escapar(j.nome)} <span class="etiqueta-voce">você</span>`;
       el.classList.toggle("vez", j.posicao === ativo);
 
       const selos = el.querySelector(".selos");
@@ -297,13 +299,32 @@
     if (!podeCobrir) $("opcao-cobrir").checked = false;
     $("minha-mao").classList.toggle("cobrindo", $("opcao-cobrir").checked);
 
+    // UC10: o botão fica visível durante toda a mão e só habilita quando o pedido é permitido
     const truco = $("btn-truco");
-    truco.hidden = !(minhaVez && e.tipoMao === "NORMAL" && e.proximoPedido);
-    truco.disabled = !e.acoes.includes("PEDIR_AUMENTO");
-    truco.textContent = (e.proximoPedido || "Truco") + "!";
-    truco.title = e.motivoSemAumento || `Pedir ${e.proximoPedido}: a mão passa a valer mais`;
+    const legenda = $("truco-legenda");
+    const emJogo = e.status === "EM_ANDAMENTO" && ["EM_RODADA", "AGUARDANDO_RESPOSTA"].includes(e.estadoMao);
+    const podePedir = e.acoes.includes("PEDIR_AUMENTO");
+    truco.hidden = !(emJogo && e.proximoPedido);
+    truco.disabled = !podePedir;
+    $("truco-texto").textContent = (e.proximoPedido || "Truco") + "!";
+    $("truco-vale").textContent = `vale ${VALOR_PEDIDO[e.proximoPedido] || ""}`;
+    legenda.hidden = truco.hidden;
+    legenda.textContent = podePedir ? "Clique ou aperte T" : motivoSemTruco(e, minhaVez);
+    truco.title = legenda.textContent;
 
+    $("meu-lugar").classList.toggle("minha-vez", minhaVez);
+    $("aviso-vez").hidden = !minhaVez;
     $("dica").textContent = dica(e);
+  }
+
+  const VALOR_PEDIDO = { Truco: 3, Seis: 6, Nove: 9, Doze: 12 };
+
+  function motivoSemTruco(e, minhaVez) {
+    if (e.tipoMao === "MAO_DE_ONZE") return "Mão de onze: sem truco";
+    if (e.tipoMao === "MAO_DE_FERRO") return "Mão de ferro: sem truco";
+    if (e.estadoMao === "AGUARDANDO_RESPOSTA") return "Esperando a resposta do pedido";
+    if (minhaVez) return e.motivoSemAumento || "";
+    return "Dá para pedir na sua vez";
   }
 
   function dica(e) {
@@ -409,6 +430,12 @@
   }
 
   // ------------------------------------------------------------ utilidades
+
+  function escapar(texto) {
+    const div = document.createElement("div");
+    div.textContent = texto;
+    return div.innerHTML;
+  }
 
   function maiorId(eventos) {
     return (eventos || []).reduce((m, ev) => Math.max(m, ev.id), 0);
